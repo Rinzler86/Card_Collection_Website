@@ -142,8 +142,7 @@ class RequestResetForm(FlaskForm):
 
     # Custom validation to check if the email exists in the database
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data.lower()).first()
-        if user is None:
+        if (user := User.query.filter_by(email=email.data.lower()).first()) is None:
             raise ValidationError('There is no account with that email. You must register first.')
 
 # create a set a new password form

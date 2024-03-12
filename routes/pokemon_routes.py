@@ -109,8 +109,7 @@ def add_to_collection(card_id):
     if not card:
         return jsonify({'error': 'Card not found.'}), 404
 
-    existing_collection = Collection.query.filter_by(user_id=user_id, card_id=card.id).first()
-    if existing_collection:
+    if existing_collection := Collection.query.filter_by(user_id=user_id, card_id=card.id).first():
         return jsonify({'info': 'This card is already in your collection.', 'alreadyInCollection': True}), 200
 
     new_collection_entry = Collection(user_id=user_id, card_id=card.id, condition=condition)
@@ -168,8 +167,7 @@ def remove_from_collection():
     # Attempt to find the card in the user's collection
     try:
         # Attempt to find the card in the user's collection
-        card_to_remove = Collection.query.filter_by(user_id=user_id, card_id=card_id).first()
-        if card_to_remove:
+        if card_to_remove := Collection.query.filter_by(user_id=user_id, card_id=card_id).first():
             db.session.delete(card_to_remove)
             db.session.commit()
             return jsonify({'removed': True, 'message': 'Card successfully removed from collection.'})

@@ -6,9 +6,8 @@ merchant_bp = Blueprint('merchant', __name__, template_folder='templates')
 @merchant_bp.route('/ebay_auth_redirect')
 def ebay_auth_redirect():
     # eBay will redirect with an authorization code in the query parameters
-    auth_code = request.args.get('code', None)
     
-    if auth_code:
+    if auth_code := request.args.get('code', None):
         # Here you would exchange the code for an access token with eBay's API
         print(f"Authorization Code: {auth_code}")
         # For simplicity, just render a template showing the code

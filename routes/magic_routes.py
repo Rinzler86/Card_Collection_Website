@@ -92,8 +92,7 @@ def add_magic_to_collection(card_id):
             return jsonify({'error': 'Failed to add card to the database.'}), 500
 
     # Check if card already in the user's collection
-    existing_collection = MTGCollection.query.filter_by(user_id=user_id, card_id=card_id).first()
-    if existing_collection:
+    if existing_collection := MTGCollection.query.filter_by(user_id=user_id, card_id=card_id).first():
         return jsonify({'info': 'This card is already in your collection.', 'alreadyInCollection': True}), 200
 
     # Add the card to the user's collection
