@@ -17,7 +17,7 @@ def fetch_rarities():
     """Fetch all possible card rarities from the Pokémon TCG API."""
     endpoint_url = "https://api.pokemontcg.io/v2/rarities"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = requests.get(endpoint_url, headers=headers, timeout=60)
     if response.status_code == 200:
         data = response.json()
         rarities = data.get('data', [])
@@ -31,7 +31,7 @@ def fetch_sets():
     """Fetch all sets from the Pokémon TCG API."""
     endpoint_url = "https://api.pokemontcg.io/v2/sets"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = requests.get(endpoint_url, headers=headers, timeout=60)
     if response.status_code == 200:
         return response.json().get('data', [])
     return []
@@ -46,7 +46,7 @@ def fetch_pokemon_data(query, limit=None):
         endpoint_url += f"&pageSize={limit}"
 
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = requests.get(endpoint_url, headers=headers, timeout=60)
     if response.status_code == 200:
         data = response.json()
         # Return only the number of results specified by limit, if it's provided.
