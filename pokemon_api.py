@@ -9,7 +9,7 @@ def fetch_rarities():
     """Fetch all possible card rarities from the Pokémon TCG API."""
     url = "https://api.pokemontcg.io/v2/rarities"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=60)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -20,7 +20,7 @@ def fetch_sets():
     """Fetch all sets from the Pokémon TCG API."""
     url = "https://api.pokemontcg.io/v2/sets"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=60)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -31,7 +31,7 @@ def fetch_pokemon_data(query):
     """Fetch Pokémon cards data based on a query."""
     url = f"https://api.pokemontcg.io/v2/cards?q={query}"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=60)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -50,7 +50,7 @@ def get_or_fetch_card(api_id):
     # Fetch card data from the Pokémon TCG API using the card's API ID
     url = f"https://api.pokemontcg.io/v2/cards/{api_id}"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=60)
 
     # Return None if the API call failed
     if not response.ok:

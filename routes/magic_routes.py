@@ -18,7 +18,7 @@ def get_cards_by_set(set_code):
 
     # Attempt to fetch the cards from the API
     try:
-        response = requests.get(request_url)
+        response = requests.get(request_url, timeout=60)
         if response.status_code == 200:
             # Extract the cards from the response
             cards_data = response.json().get('cards', [])
