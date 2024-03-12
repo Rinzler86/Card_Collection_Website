@@ -4,6 +4,7 @@
 
 import requests
 import json
+from security import safe_requests
 
 # Your credentials
 app_id = 'zebduffe-Collecti-SBX-a21dfce92-05537821'
@@ -21,7 +22,7 @@ params = {
 }
 
 # Make the GET request
-response = requests.get(endpoint, params=params)
+response = safe_requests.get(endpoint, params=params)
 
 # Check if the request was successful
 if response.status_code == 200:

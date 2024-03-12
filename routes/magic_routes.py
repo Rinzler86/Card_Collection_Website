@@ -6,6 +6,7 @@ from magic_api import get_all_cards, get_card_by_id, get_all_sets, get_cards_by_
 from magic_models import MTGCollection, MTGCard  # Assuming models for Magic cards and collections
 from db_initialize import db
 from flask import request, jsonify
+from security import safe_requests
 
 
 # Create a blueprint for the Magic: The Gathering routes
@@ -18,7 +19,7 @@ def get_cards_by_set(set_code):
 
     # Attempt to fetch the cards from the API
     try:
-        response = requests.get(request_url)
+        response = safe_requests.get(request_url)
         if response.status_code == 200:
             # Extract the cards from the response
             cards_data = response.json().get('cards', [])
