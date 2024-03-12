@@ -113,10 +113,9 @@ def reset_token(token):
         return redirect(url_for('index'))
 
     # Verify the token
-    user_email = verify_token(token)
 
     # Redirect the user to the reset request form if the token is invalid or expired
-    if user_email is None:
+    if (user_email := verify_token(token)) is None:
         flash('That is an invalid or expired token', 'warning')
         print("Invalid or expired token.")
         return redirect(url_for('email.reset_request'))

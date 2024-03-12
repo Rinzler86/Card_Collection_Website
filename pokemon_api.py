@@ -41,10 +41,9 @@ def fetch_pokemon_data(query):
 def get_or_fetch_card(api_id):
     """Check if the card is in the database; if not, fetch from the API and store it."""
     # Check if the card already exists in the database
-    card = Card.query.filter_by(api_id=api_id).first()
 
     # return the card if it exists
-    if card:
+    if card := Card.query.filter_by(api_id=api_id).first():
         return card  # Return the card if it exists
 
     # Fetch card data from the Pokémon TCG API using the card's API ID

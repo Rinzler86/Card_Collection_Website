@@ -61,8 +61,7 @@ def view_neopets_collection():
 
     collections_with_details = []
     for collection_item in user_collections:
-        neopet_card = NeopetCard.query.filter_by(id=collection_item.neopet_card_id).first()
-        if neopet_card:
+        if neopet_card := NeopetCard.query.filter_by(id=collection_item.neopet_card_id).first():
             set_entry = NeopetSet.query.filter_by(id=neopet_card.set_id).first()
             set_name = set_entry.name if set_entry else "Unknown Set"
             collections_with_details.append({
@@ -82,9 +81,8 @@ def remove_from_neopets_collection(neopet_card_id):
     if 'user_id' not in session:
         return jsonify({'removed': False, 'message': 'You must be logged in to remove items.'}), 401
 
-    collection_item = NeopetsCollection.query.filter_by(user_id=session['user_id'],
-                                                        neopet_card_id=neopet_card_id).first()
-    if collection_item:
+    if collection_item := NeopetsCollection.query.filter_by(user_id=session['user_id'],
+                                                        neopet_card_id=neopet_card_id).first():
         db.session.delete(collection_item)
         db.session.commit()
         return jsonify({'removed': True}), 200
@@ -102,8 +100,7 @@ def add_neopet_to_collection(neopet_card_id):
     user_id = session.get('user_id')
 
     # Check if the card is already in the collection
-    existing_entry = NeopetsCollection.query.filter_by(user_id=user_id, neopet_card_id=neopet_card_id).first()
-    if existing_entry:
+    if existing_entry := NeopetsCollection.query.filter_by(user_id=user_id, neopet_card_id=neopet_card_id).first():
         # Return JSON indicating the card is already in the collection
         return jsonify({'added': False, 'alreadyInCollection': True}), 200
 
