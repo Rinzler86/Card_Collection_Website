@@ -1,15 +1,15 @@
 # Description: This file contains functions to interact with the Pokémon TCG API.
-import requests
 from db_initialize import db
 from pokemon_models import Card
 from ignore_creds import TCG_API_KEY
+from security import safe_requests
 
 # Retrieve rarities from the Pokémon TCG API
 def fetch_rarities():
     """Fetch all possible card rarities from the Pokémon TCG API."""
     url = "https://api.pokemontcg.io/v2/rarities"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = safe_requests.get(url, headers=headers)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -20,7 +20,7 @@ def fetch_sets():
     """Fetch all sets from the Pokémon TCG API."""
     url = "https://api.pokemontcg.io/v2/sets"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = safe_requests.get(url, headers=headers)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -31,7 +31,7 @@ def fetch_pokemon_data(query):
     """Fetch Pokémon cards data based on a query."""
     url = f"https://api.pokemontcg.io/v2/cards?q={query}"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = safe_requests.get(url, headers=headers)
     if response.ok:
         return response.json().get('data', [])
     else:
@@ -50,7 +50,7 @@ def get_or_fetch_card(api_id):
     # Fetch card data from the Pokémon TCG API using the card's API ID
     url = f"https://api.pokemontcg.io/v2/cards/{api_id}"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(url, headers=headers)
+    response = safe_requests.get(url, headers=headers)
 
     # Return None if the API call failed
     if not response.ok:
