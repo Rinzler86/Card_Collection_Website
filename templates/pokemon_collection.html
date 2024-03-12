@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Collection</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <meta content="{{ csrf_token() }}" name="csrf-token">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Global Navbar Element -->
+{% include 'core_features/navbar.html' %}
+
+
+<div class="container mt-5">
+    <h2>Your Collection</h2>
+    <div class="row">
+        {% for item in collections %}
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <img alt="{{ item.name }}" class="card-img-top" src="{{ item.image_url }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">Condition: {{ item.condition }}</p>
+                        </div>
+                        <form class="ml-auto">
+                            <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+                            <input name="card_id" type="hidden" value="{{ item.id }}">
+                            <button class="btn btn-outline remove-from-collection-btn"
+                                    style="margin-top: -10px; color: #F26419;  outline: 2px solid black;" data-card-id="{{ item.card_id }} "
+                                    type="button">Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>You have no cards in your collection.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+<!-- Custom Confirmation Modal -->
+<div class="modal" id="confirmationModal" style="display:none;">
+    <div class="modal-content">
+        <p>Are you sure you want to remove this card from your collection?</p>
+        <div class="modal-footer">
+            <button class="btn btn-danger custom-confirm" id="confirmDelete">Yes</button>
+            <button class="btn btn-secondary custom-cancel" id="cancelDelete">No</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+        $(document).ready(function() {
+            $('.remove-from-collection-btn').click(function(e) {
+                e.preventDefault();
+                var cardId = $(this).data('cardId');
+                var csrfToken = $('input[name="csrf_token"]').val(); // Fetch the token from the form
+
+                // Show the custom modal instead of using confirm()
+                $('#confirmationModal').show();
+
+                // Handle the "Yes" button click
+                $('#confirmDelete').off().click(function() {
+                    $('#confirmationModal').hide();
+
+                    // Proceed with AJAX call to remove the card
+                    $.ajax({
+                        type: 'POST',
+                        url: '/pokemon/remove_from_collection',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            card_id: cardId
+                        }),
+                        headers: {
+                            "X-CSRFToken": csrfToken
+                        },
+                        success: function(response) {
+                            if (response.removed) {
+                                // Directly remove the card from UI
+                                $(`button[data-card-id='${cardId}']`).closest('.col-md-4').remove();
+                            } else {
+                                // Optionally handle the case where 'removed' is false
+                                console.log(response.message);
+                            }
+                        },
+                        error: function(xhr) {
+                            // Handle error
+                            console.error(`Error: ${xhr.responseJSON.message}`);
+                        }
+                    });
+                });
+
+                // Handle the "No" button click
+                $('#cancelDelete').click(function() {
+                    $('#confirmationModal').hide();
+                });
+            });
+        });
+
+
+</script>
+
+</body>
+</html>

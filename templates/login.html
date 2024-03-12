@@ -1,0 +1,63 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- Global Navbar Element -->
+    {% include 'core_features/navbar.html' %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <h2>Login</h2>
+    <form action="{{ url_for('user.login') }}" method="POST" autocomplete="on">
+        <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.email.label(class_="form-control-label") }}
+            {{ form.email(class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class_="form-control-label") }}
+            {{ form.password(class_="form-control") }}
+            <small class="form-text text-right">
+                <a href="{{ url_for('email.reset_request') }}" style="color: black; font-size: 15px;">Forgot Password?</a>
+            </small>
+        </div>
+        <div class="form-group">
+            {{ form.submit(class_="btn btn-primary") }}
+        </div>
+    </form>
+
+</div>
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+</body>
+</html>

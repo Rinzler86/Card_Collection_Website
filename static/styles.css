@@ -1,0 +1,313 @@
+
+/*
+Theme Colors
+
+Hunyadi Yellow - #F6AE2D PRIMARY
+Orange (Pantone) - #F26419 ACCENT
+Charcoal(Medium Blue) - #2F4858 ACCENT
+Carolina Blue - #86BBD8 PRIMARY
+Lapis Lazuli - #33658A ACCENT
+
+Theme Fonts
+
+Font Links
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+HEADER FONT
+.bebas-neue-regular {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+PARAGRAPH FONT
+.instrument-serif-regular {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+*/
+
+/* Theme Color & Font Definitions */
+
+:root {
+    --primary-color: #F6AE2D; /* Hunyadi Yellow */
+    --accent-color-orange: #F26419; /* Orange (Pantone) */
+    --accent-color-charcoal: #2F4858; /* Charcoal(Medium Blue) */
+    --primary-color-blue: #86BBD8; /* Carolina Blue */
+    --accent-color-lapis: #33658A; /* Lapis Lazuli */
+}
+
+/* Global Styles for entire site*/
+
+html, body {
+    height: 100%;
+    margin: 0; /* Remove default margin */
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+.content {
+    flex: 1; /* Allows the content to expand */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+/* Font Family Definitions */
+body, input, button, select, option {
+    font-family: 'Instrument Serif', serif; /* Paragraph font */
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand, .modal-title {
+    font-family: 'Bebas Neue', sans-serif; /* Header font */
+}
+
+/* Navbar Customization */
+.navbar-light {
+    background-color: var(--primary-color-blue) !important; /* Using Carolina Blue for navbar */
+}
+
+.navbar-light .navbar-brand,
+.navbar-light .nav-link {
+    color: #ffffff !important; /* White text for contrast */
+    font-size: 25px;
+}
+
+/* Button Customization */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Button Hover Customization */
+.btn-primary:hover {
+    background-color: darken(var(--primary-color), 10%);
+    border-color: darken(var(--primary-color), 10%);
+}
+
+/* Accent Button Customization */
+.btn-accent {
+    background-color: var(--accent-color-orange);
+    border-color: var(--accent-color-orange);
+}
+
+/* Accent Button Hover Customization */
+.btn-accent:hover {
+    background-color: darken(var(--accent-color-orange), 10%);
+    border-color: darken(var(--accent-color-orange), 10%);
+}
+
+/* Modal Customization to match theme */
+.modal-content {
+    border-color: var(--accent-color-charcoal);
+}
+
+/* Link Customization */
+a, .link-primary {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Link Hover Customization */
+a:hover, .link-primary:hover {
+    color: darken(var(--primary-color), 10%);
+}
+
+/* Heading Customization */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--accent-color-lapis);
+}
+
+/* Footer Customization */
+.footer {
+    background-color: #F6AE2D !important; /* Dark footer for contrast */
+    color: #2F4858 !important; /* White text for readability */
+    width: 100%;
+}
+
+/* Form Elements Customization */
+input, select, textarea {
+    border: 1px solid var(--accent-color-charcoal);
+    color: var(--accent-color-lapis);
+}
+
+/* Form Elements Focus Customization */
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(246, 174, 45, 0.25); /* Focusing with Hunyadi Yellow */
+}
+
+/* Text and Background Color Customization */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Text and Background Color Customization */
+.text-accent {
+    color: var(--accent-color-orange) !important;
+}
+
+/* Background Color Customization */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* Background Color Customization */
+.bg-accent {
+    background-color: var(--accent-color-orange) !important;
+}
+
+/* Custom Modal Styles */
+.modal-content {
+    background-color: #f8f9fa; /* Light grey background */
+    border-radius: 8px; /* Rounded corners for the modal */
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6; /* Adds a slight border to the header */
+}
+
+.modal-title {
+    color: #495057; /* Dark grey color for the title */
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6; /* Adds a slight border to the footer */
+}
+
+/* Custom Button Styles */
+.btn-danger {
+    background-color: #dc3545; /* Bootstrap's default danger color */
+    border-color: #dc3545;
+}
+
+/* Custom Button Hover Styles */
+.btn-danger:hover {
+    background-color: #c82333; /* Darker shade on hover */
+    border-color: #bd2130;
+}
+
+/* Custom Button Styles */
+.btn-secondary {
+    background-color: #6c757d; /* Bootstrap's default secondary color */
+    border-color: #6c757d;
+}
+
+/* Custom Button Hover Styles */
+.btn-secondary:hover {
+    background-color: #5a6268; /* Darker shade on hover */
+    border-color: #545b62;
+}
+
+/* Custom Button Styles */
+.custom-input-width .form-control {
+    max-width: 25%;
+    margin: left; /* Centers the input if the parent container has a specific width */
+}
+
+/* Profile Image Styles */
+.profile-img-container img {
+    width: 150px; /* Adjust size as needed */
+    height: 150px; /* Adjust size as needed */
+    border-radius: 50%; /* Creates the circle shape */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+/* Account Container Styles */
+.profile-img-container img {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust to keep aspect ratio square */
+    border-radius: 50%; /* Creates the circle frame */
+}
+
+
+.account-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.account-section {
+    flex: 1;
+    min-width: 250px;
+    margin: 10px;
+}
+
+/* Hero Section Styles */
+.custom-input-width > .form-control,
+.custom-input-width > .form-control-file {
+    max-width: 400px;
+}
+
+/* Hero Section Styles */
+.profile-img-container img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* media query for mobile devices */
+@media (min-width: 768px) {
+    .account-container {
+        justify-content: space-around;
+    }
+}
+
+/* hero section styles */
+.hero-section {
+    background-image: url('../static/splash_image_NEW.png');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 4px 4px 4px #e0f804;
+    border-bottom: 7px ridge #F6AE2D !important;
+}
+
+.hero-section h1 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 48px;
+  color: white;
+}
+
+.container p {
+  font-family: 'Instrument Serif', serif;
+}
+
+
+.card-img-top {
+    border: 7px ridge #F6AE2D;
+    transition: transform 0.3s ease-in-out; /* Add transition for smooth animation */
+}
+
+.card-img-top:hover {
+    transform: scale(1.05); /* Zoom in effect on hover */
+}
+
+.card-body {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.custom-button {
+    color: #2F4858; /* Set the button text color */
+    background-color: #86BBD8; /* Carolina Blue */
+    /* Set the button background color */
+}
+
+.custom-button:hover {
+    background-color: #F6AE2D; /* Darker shade on hover */
+    border-color: #545b62;
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Magic: The Gathering Cards</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Global Navbar Element -->
+{% include 'core_features/navbar.html' %}
+
+<div class="container mt-5">
+    <h2>Search for Magic Cards</h2>
+    <h5 style="color: red; font-size: smaller;">Please note: Loading times for
+        Magic: The Gathering card results may be longer than usual. We appreciate your patience! Additionally,
+        please be aware that some card and set information may be incomplete or unavailable.</h5>
+
+
+    <form action="{{ url_for('magic.magic_cards') }}" method="POST">
+        <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="cardName">Name:</label>
+            <input class="form-control" id="cardName" name="name" placeholder="Enter card name" type="text"
+                   value="{{ card_name }}">
+        </div>
+        <div class="form-group">
+            <label for="setSelect">Set:</label>
+            <select class="form-control select2" id="setSelect" name="set">
+                <option value="">All Sets</option>
+                {% for set in sets %}
+                <option value="{{ set['code'] }}" {% if selected_set == set['code'] %}selected{% endif %}>{{ set['name'] }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        {% for card in cards %}
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <img alt="{{ card.name }}" class="card-img-top" src="{{ card.imageUrl }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">{{ card.name }}</h5>
+                            <p class="card-text">Set: {{ card.setName }}</p>
+                        </div>
+                        {% if session.get('user_id') %}
+                        <button class="btn btn-outline-primary add-to-magic-collection ml-auto"
+                                data-magic-card-id="{{ card.id }}">Add
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.add-to-magic-collection').click(function() {
+            var button = $(this);
+            var magicCardId = button.data('magic-card-id');
+            var csrfToken = '{{ csrf_token() }}';
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ url_for("magic.add_magic_to_collection", card_id=0) }}'.replace('/0', '/' + magicCardId),
+                data: JSON.stringify({ 'csrf_token': csrfToken }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': csrfToken },
+                success: function(response) {
+                    if (response.added) {
+                        button.removeClass('btn-primary').addClass('btn-success').text('Added').prop('disabled', true);
+                    } else if (response.alreadyInCollection) {
+                        button.removeClass('btn-primary').addClass('btn-secondary').text('Already in Collection').prop('disabled', true);
+                    } else {
+                        // Handle other cases
+                    }
+                },
+                error: function() {
+                    alert('Error adding card to collection.');
+                }
+            });
+        });
+
+        // Image source correction for cards
+        $('img.card-img-top').each(function() {
+            var img = $(this);
+            var defaultImg = '{{ url_for("static", filename="MTG-backside.png") }}';
+
+            // Check if the src attribute is "None", empty, or undefined, and set it to the default image
+            if (!img.attr('src') || img.attr('src') === "None") {
+                img.attr('src', defaultImg);
+            }
+
+            // If the image fails to load (including "None" src), replace it with the default image
+            img.on('error', function() {
+                $(this).attr('src', defaultImg);
+            });
+        });
+    });
+</script>
+</body>
+</html>

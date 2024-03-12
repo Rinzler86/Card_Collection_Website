@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Request</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Global Navbar Element -->
+    {% include 'core_features/navbar.html' %}
+
+    <div class="container my-4">
+        <h2>Reset Password</h2>
+        <p>Please enter your email address. You will receive a link to create a new password via email.</p>
+        <form action="{{ url_for('email.reset_request') }}" method="POST">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.email.label(class_="form-control-label") }}
+                {{ form.email(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class_="btn btn-primary") }}
+                <p>If no action is taken, please ensure you've entered a registered email address.</p>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Global Footer Elements -->
+    {% include 'core_features/footer.html' %}
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

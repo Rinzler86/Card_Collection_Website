@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Pokémon Cards</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Global Navbar Element -->
+{% include 'core_features/navbar.html' %}
+
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="container mt-5">
+    <h2>Search for Pokémon Cards</h2>
+    <form action="{{ url_for('pokemon.cards') }}" method="POST">
+        <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="form-row">
+            <!-- Pokémon Name -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="pokemon_name">Pokémon Name:</label>
+                    <input class="form-control" id="pokemon_name" name="pokemon_name" placeholder="Enter Pokémon name"
+                           type="text" value="{{ pokemon_name }}">
+                </div>
+            </div>
+
+              <!-- Set Selection -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="set">Set:</label>
+                    <select class="form-control set-select" id="setSelect" name="set">
+                        <option value="">All Sets</option>
+                        {% for set in sets %}
+                        <option value="{{ set.id }}" {% if selected_set == set.id %}selected{% endif %}>{{ set.name }} ({{ set.releaseDate }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Year Selections -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="from_year">From Year:</label>
+                        <input class="form-control" id="from_year" min="1999" name="from_year" type="number"
+                               value="{{ from_year }}">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="to_year">To Year:</label>
+                        <input class="form-control" id="to_year" min="1999" name="to_year" type="number"
+                               value="{{ to_year }}">
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-md-6 d-flex justify-content-end">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row mt-4">
+        {% for card in cards %}
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <img alt="{{ card.name }}" class="card-img-top" src="{{ card.images.large }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">{{ card.name }}</h5>
+                            <p class="card-text">Rarity: {{ card.rarity }}</p>
+                            {% if card.cardmarket %}
+                            <p class="card-text">Estimated Value: ${{ card.cardmarket.prices.averageSellPrice }}</p>
+
+                            {% elif card.tcgplayer %}
+                            <p class="card-text">Price: ${{ card.tcgplayer.prices.market }}</p>
+                            <a class="btn btn-primary" href="{{ card.tcgplayer.url }}" target="_blank">View on
+                                TCGPlayer</a>
+                            {% else %}
+                            <p class="card-text">Pricing data unavailable.</p>
+                            {% endif %}
+                        </div>
+                        {% if session.get('user_id') %}
+                        <div class="ml-auto">
+                            <form action="{{ url_for('pokemon.add_to_collection', card_id=card.id) }}" method="post">
+                                <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+                                <div class="form-group">
+                                    <label for="condition">Condition:</label>
+                                    <select class="form-control" name="condition">
+                                        <option value="Mint">Mint</option>
+                                        <option value="Near Mint">Near Mint</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-outline-primary" type="submit">Add</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+   </div>
+</div>
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+        $(document).ready(function() {
+            // AJAX form submission for adding Pokémon to the collection
+            $('form[action^="/pokemon/add_to_collection"]').on('submit', function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
+                var form = $(this);
+                var url = form.attr('action');
+                var data = form.serialize(); // Serialize the form data for submission
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    success: function(response) {
+                        var button = form.find('button[type="submit"]');
+                        if (response.added) {
+                            // Update button to indicate success
+                            button.removeClass('btn-outline-primary').addClass('btn-success').text('Added').prop('disabled', true);
+                        } else if (response.alreadyInCollection) {
+                            // Update button to indicate the item is already in the collection
+                            button.removeClass('btn-outline-primary').addClass('btn-secondary').text('Already in Collection').prop('disabled', true);
+                        }
+                    },
+                    error: function() {
+                        alert('Error adding the card to collection.');
+                    }
+                });
+            });
+        });
+
+
+</script>
+
+</body>
+</html>

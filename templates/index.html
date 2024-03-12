@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Pokémon Card Explorer</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="content">
+    <!-- Global Navbar Element -->
+    {% include 'core_features/navbar.html' %}
+
+    <div class="hero-section">
+        <h1>Welcome to Collectible Chest!</h1>
+    </div>
+    <div class="container mt-5">
+      <div class="row">
+          <div class="col-sm-4">
+              <div class="card">
+                  <img class="card-img-top" src="static\pokemon_splash_scree.png" alt="Pokemon Card">
+                  <div class="card-body">
+                      <h5 class="card-title">Pokemon Card Explorer</h5>
+                      <p class="card-text">Dive into the world of Pokémon TCG, where you can search and collect cards of your favorite Pokémon, from the classic to the latest generations</p>
+                      <a href="{{ url_for('pokemon.cards') }}" class="btn btn-primary custom-button">Pokemon</a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card">
+                <img class="card-img-top" src="static/magic_the_Gathering_splash_screen.png" alt="Magic: The Gathering Card">
+                <div class="card-body">
+                    <h5 class="card-title">Magic: The Gathering Card Explorer</h5>
+                    <p class="card-text">Explore the expansive universe of Magic: The Gathering TCG, where you can discover powerful spells, creatures, and artifacts to dominate the game</p>
+                    <a href="{{ url_for('magic.magic_cards') }}" class="btn btn-primary custom-button">Magic: The Gathering</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card">
+              <img class="card-img-top" src="static\neopets_splash_screen.png" alt="Neopets Card">
+              <div class="card-body">
+                  <h5 class="card-title">Neopets Card Explorer</h5>
+                  <p class="card-text">Embark on an adventure in Neopia and find the most coveted Neopets TCG cards to bring your virtual pets and strategies to life</p>
+                  <a href="{{ url_for('neopets.neopets') }}" class="btn btn-primary custom-button">Neopets</a>
+              </div>
+          </div>
+      </div>
+      </div>
+  </div>
+
+    <div class="container mt-4">
+        <p>This is a place where you can explore and learn more about TCG cards and more collectibles. Start your adventure now by browsing the cards or logging in to manage your collection.</p>
+        <a href="#" class="btn btn-primary">Explore Cards</a> <!-- Update the href to point to your card browsing page -->
+    </div>
+</div>
+
+
+<!-- Disclaimer Modal -->
+{% if not disclaimer_seen %}
+<div class="modal fade" id="disclaimerModal" tabindex="-1" role="dialog" aria-labelledby="disclaimerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="disclaimerModalLabel">Disclaimer and Acknowledgment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Welcome to Collectible Chest, your portal to the world of Trading Card Games (TCG) and collectibles.</p>
+        <p>Please note that Collectible Chest is an independent platform aimed at providing valuable information and fostering a community for collectors and enthusiasts. We are <strong>not affiliated, endorsed, sponsored, or supported</strong> by the creators or rights holders of any trading card games, including but not limited to Pokémon, Magic: The Gathering, and Neopets, or their respective parent companies.</p>
+        <p>All the data and resources available on Collectible Chest are <strong>freely accessible</strong> and meant for educational and entertainment purposes only. We respect intellectual property rights and strive to ensure that all content on our platform is used fairly and responsibly. We encourage our users to support official releases and merchandise.</p>
+        <p>Collectible Chest does not solicit users to spend money for accessing data or engaging with our content. We are committed to maintaining an open and transparent platform, ensuring that our community thrives on mutual respect for the fandoms we love.</p>
+        <p>By continuing to use Collectible Chest, you acknowledge and agree to this disclaimer. Thank you for being a part of our community.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setDisclaimerCookie()">I Understand</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  function setDisclaimerCookie() {
+    document.cookie = "disclaimer_seen=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+  }
+  
+  $(document).ready(function(){
+      if (!document.cookie.includes('disclaimer_seen=true')) {
+          $("#disclaimerModal").modal('show');
+      }
+  });
+</script>
+  
+
+</body>
+</html>

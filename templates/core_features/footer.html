@@ -1,0 +1,40 @@
+<!-- core_features/footer.html -->
+<footer class="footer mt-auto py-3 bg-light" style="margin-top: 15px !important;">
+    <div class="container text-center">
+        <span class="text-muted">© {{ now.year }} Card Explorer - All rights reserved.</span>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#disclaimerModal">
+            Legal Disclaimer
+        </button>
+    </div>
+</footer>
+
+<!-- Disclaimer Modal -->
+<div class="modal fade" id="disclaimerModal" tabindex="-1" role="dialog" aria-labelledby="disclaimerModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="disclaimerModalLabel">Legal Disclaimer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Welcome to Collectible Chest, your portal to the world of Trading Card Games (TCG) and collectibles.</p>
+        <p>Please note that Collectible Chest is an independent platform aimed at providing valuable information and fostering a community for collectors and enthusiasts. We are <strong>not affiliated, endorsed, sponsored, or supported</strong> by the creators or rights holders of any trading card games, including but not limited to Pokémon, Magic: The Gathering, and Neopets, or their respective parent companies.</p>
+        <p>All the data and resources available on Collectible Chest are <strong>freely accessible</strong> and meant for educational and entertainment purposes only. We respect intellectual property rights and strive to ensure that all content on our platform is used fairly and responsibly. We encourage our users to support official releases and merchandise.</p>
+        <p>Collectible Chest does not solicit users to spend money for accessing data or engaging with our content. We are committed to maintaining an open and transparent platform, ensuring that our community thrives on mutual respect for the fandoms we love.</p>
+        <p>By continuing to use Collectible Chest, you acknowledge and agree to this disclaimer. Thank you for being a part of our community.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

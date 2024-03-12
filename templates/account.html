@@ -1,0 +1,173 @@
+<!-- account.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Account Settings</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Limelight&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!-- Global Navbar Element -->
+    {% include 'core_features/navbar.html' %}
+
+    <div class="row">
+        <!-- Left Section for Account Settings & Profile Picture -->
+        <div class="col-md-6">
+            <h4>Account Settings</h4>
+            <form action="{{ url_for('user.account') }}" method="POST" enctype="multipart/form-data">
+                {{ update_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ update_form.first_name.label(class_="form-control-label") }}
+                    {{ update_form.first_name(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ update_form.last_name.label(class_="form-control-label") }}
+                    {{ update_form.last_name(class_="form-control") }}
+                </div>
+                <button type="submit" name="update_account" class="btn btn-primary">Update Account</button>
+            </form>
+
+            <h4>Update Profile Picture</h4>
+            <form action="{{ url_for('user.account') }}" method="POST" enctype="multipart/form-data">
+                {{ profile_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ profile_form.picture.label }}
+                    {{ profile_form.picture(class="form-control-file") }}
+                </div>
+                <div class="profile-img-container">
+                    <img src="{{ image_file }}" alt="User Profile Image" class="rounded-circle profile-img">
+                </div>
+                <button type="submit" name="update_profile_picture" class="btn btn-primary">Update Picture</button>
+            </form>
+        </div>
+
+        <!-- Right Section for Password Reset & Account Deletion -->
+        <div class="col-md-6">
+            <h4>Reset Password</h4>
+            <form action="{{ url_for('user.reset_password') }}" method="POST">
+                {{ password_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ password_form.password.label(class_="form-control-label") }}
+                    {{ password_form.password(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ password_form.confirm.label(class_="form-control-label") }}
+                    {{ password_form.confirm(class_="form-control") }}
+                </div>
+                <button type="submit" class="btn btn-warning">Reset Password</button>
+            </form>
+
+            <h4>Delete Account</h4>
+            <form action="{{ url_for('user.delete_account') }}" method="POST" onsubmit="return confirmDeletion();">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button id="deleteAccountBtn" type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Confirmation Modal for Account Deletion -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirm Account Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your account? <span style="color: red; font-weight: bold;">This action cannot be undone.</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger custom-confirm" id="confirmDelete">Yes, Delete Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Account Deleted</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Your account has been successfully deleted.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="successOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form id="deleteAccountForm" action="{{ url_for('user.delete_account') }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+
+<!-- Global Footer Elements -->
+{% include 'core_features/footer.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#deleteAccountBtn').click(function(e) {
+            e.preventDefault();
+            $('#confirmationModal').modal('show');
+        });
+
+        $('#confirmDelete').click(function() {
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('user.delete_account') }}",
+                data: {
+                    csrf_token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    // Hide the confirmation modal and show the success modal
+                    $('#confirmationModal').modal('hide');
+                    $('#successModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error deleting account. Please try again.');
+                }
+            });
+        });
+
+        // Handle the redirection when the user acknowledges the success message
+        $('#successOkBtn').click(function() {
+            window.location.href = "/"; // Redirect to homepage or login page
+        });
+
+        $('#cancelDelete').click(function() {
+            $('#confirmationModal').modal('hide');
+        });
+    });
+</script>
+
+
+</body>
+</html>
+
+

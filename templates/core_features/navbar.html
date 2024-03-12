@@ -1,0 +1,62 @@
+<!-- navbar.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+        <img alt="Collectible Chest Logo" class="d-inline-block align-top" height="50"
+             loading="lazy" src="{{ url_for('static', filename='collectiblechestlogoofficial.png') }}" width="50">
+    </a>
+    <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbarNav" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            </li>
+            <!-- Cards dropdown -->
+            <li class="nav-item dropdown">
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                   href="#"
+                   id="cardsDropdown" role="button">
+                    Cards
+                </a>
+                <div aria-labelledby="cardsDropdown" class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url_for('pokemon.cards') }}">Pokémon</a>
+                    <a class="dropdown-item" href="{{ url_for('neopets.neopets') }}">Neopets</a>
+                    <a class="dropdown-item" href="{{ url_for('magic.magic_cards') }}">Magic: The Gathering</a>
+                </div>
+            </li>
+            <!-- Collection dropdown -->
+            <li class="nav-item dropdown">
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                   href="#" id="collectionDropdown" role="button">
+                    My Collection
+                </a>
+                <div aria-labelledby="collectionDropdown" class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url_for('pokemon.view_collection') }}">Pokémon Collection</a>
+                    <a class="dropdown-item" href="{{ url_for('neopets.view_neopets_collection') }}">Neopets
+                        Collection</a>
+                    <a class="dropdown-item" href="{{ url_for('magic.view_magic_collection') }}">Magic: The Gathering
+                        Collection</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            {% if session.get('user_id') %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.account') }}">Hello, {{ session.get('first_name').title()
+                    }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.logout') }}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.login') }}">Sign In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.signup') }}">Register</a>
+                {% endif %}
+        </ul>
+    </div>
+</nav>
