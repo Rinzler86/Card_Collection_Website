@@ -1,12 +1,12 @@
 # This file contains the routes for the Pokémon TCG API and the user's collection.
-from flask import render_template, request, url_for, redirect, flash, session, Blueprint, current_app
+from flask import render_template, request, url_for, redirect, flash, session, Blueprint
 from datetime import datetime
-import requests
 from flask import jsonify
 from pokemon_api import get_or_fetch_card
 from pokemon_models import Collection, Card
 from db_initialize import db
 from ignore_creds import TCG_API_KEY
+from security import safe_requests
 
 # Create a blueprint for the Pokémon TCG routes
 pokemon_bp = Blueprint('pokemon', __name__)
@@ -17,7 +17,7 @@ def fetch_rarities():
     """Fetch all possible card rarities from the Pokémon TCG API."""
     endpoint_url = "https://api.pokemontcg.io/v2/rarities"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = safe_requests.get(endpoint_url, headers=headers)
     if response.status_code == 200:
         data = response.json()
         rarities = data.get('data', [])
@@ -31,7 +31,7 @@ def fetch_sets():
     """Fetch all sets from the Pokémon TCG API."""
     endpoint_url = "https://api.pokemontcg.io/v2/sets"
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = safe_requests.get(endpoint_url, headers=headers)
     if response.status_code == 200:
         return response.json().get('data', [])
     return []
@@ -46,7 +46,7 @@ def fetch_pokemon_data(query, limit=None):
         endpoint_url += f"&pageSize={limit}"
 
     headers = {"X-Api-Key": TCG_API_KEY}
-    response = requests.get(endpoint_url, headers=headers)
+    response = safe_requests.get(endpoint_url, headers=headers)
     if response.status_code == 200:
         data = response.json()
         # Return only the number of results specified by limit, if it's provided.
