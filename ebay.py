@@ -21,7 +21,7 @@ params = {
 }
 
 # Make the GET request
-response = requests.get(endpoint, params=params)
+response = requests.get(endpoint, params=params, timeout=60)
 
 # Check if the request was successful
 if response.status_code == 200:
@@ -48,7 +48,7 @@ headers = {
 }
 
 # Make the POST request
-response = requests.post(endpoint, data=payload, headers=headers)
+response = requests.post(endpoint, data=payload, headers=headers, timeout=60)
 
 # Check if the request was successful
 if response.status_code == 200:
