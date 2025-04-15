@@ -12,7 +12,7 @@ def get_all_cards(page=1, page_size=100):
         'page': page,
         'pageSize': page_size
     }
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, timeout=60)
     if response.status_code == 200:
         return response.json().get('cards', [])
     else:
@@ -22,7 +22,7 @@ def get_all_cards(page=1, page_size=100):
 def get_card_by_id(card_id):
     """Fetch a specific MTG card by its ID."""
     url = f"{API_BASE_URL}/cards/{card_id}"
-    response = requests.get(url)
+    response = requests.get(url, timeout=60)
     if response.status_code == 200:
         return response.json().get('card', {})
     else:
@@ -32,7 +32,7 @@ def get_card_by_id(card_id):
 def get_all_sets():
     """Fetch a list of all MTG sets."""
     url = f"{API_BASE_URL}/sets"
-    response = requests.get(url)
+    response = requests.get(url, timeout=60)
     if response.status_code == 200:
         return response.json().get('sets', [])
     else:
@@ -47,7 +47,7 @@ def get_cards_by_name(name, page=1, page_size=100):
         'page': page,
         'pageSize': page_size
     }
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, timeout=60)
     if response.status_code == 200:
         return response.json().get('cards', [])
     else:
