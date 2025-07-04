@@ -1,5 +1,6 @@
 # Description: This file contains functions to interact with the Magic: The Gathering API.
 import requests
+from security import safe_requests
 
 # Define the base URL for the Magic: The Gathering API
 API_BASE_URL = "https://api.magicthegathering.io/v1"
@@ -12,7 +13,7 @@ def get_all_cards(page=1, page_size=100):
         'page': page,
         'pageSize': page_size
     }
-    response = requests.get(url, params=params)
+    response = safe_requests.get(url, params=params)
     if response.status_code == 200:
         return response.json().get('cards', [])
     else:
@@ -22,7 +23,7 @@ def get_all_cards(page=1, page_size=100):
 def get_card_by_id(card_id):
     """Fetch a specific MTG card by its ID."""
     url = f"{API_BASE_URL}/cards/{card_id}"
-    response = requests.get(url)
+    response = safe_requests.get(url)
     if response.status_code == 200:
         return response.json().get('card', {})
     else:
@@ -47,7 +48,7 @@ def get_cards_by_name(name, page=1, page_size=100):
         'page': page,
         'pageSize': page_size
     }
-    response = requests.get(url, params=params)
+    response = safe_requests.get(url, params=params)
     if response.status_code == 200:
         return response.json().get('cards', [])
     else:
